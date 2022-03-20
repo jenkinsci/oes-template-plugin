@@ -1,13 +1,13 @@
 package cn.opsbox.jenkinsci.plugins.cps;
 
 import hudson.AbortException;
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.*;
 import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
 import jenkins.scm.api.SCMFileSystem;
 import lombok.Getter;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowExecution;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowFactoryAction2;
 import org.jenkinsci.plugins.workflow.cps.persistence.PersistIn;
@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.jenkinsci.plugins.workflow.cps.persistence.PersistenceContext.JOB;
 
@@ -33,16 +34,16 @@ public class CpsTemplateFlowDefinition extends FlowDefinition {
   @Getter
   private final SCM scm;
   @Getter
-  private final String templateId;
+  private final String scriptPath;
 
   @Getter
-  private final String templateConfig;
+  private final String parameters;
 
   @DataBoundConstructor
-  public CpsTemplateFlowDefinition(SCM scm, String templateId, String templateConfig) {
+  public CpsTemplateFlowDefinition(SCM scm, String scriptPath, String parameters) {
     this.scm = scm;
-    this.templateId = templateId;
-    this.templateConfig = templateConfig;
+    this.scriptPath = scriptPath;
+    this.parameters = parameters;
   }
 
   @Override
@@ -61,39 +62,62 @@ public class CpsTemplateFlowDefinition extends FlowDefinition {
     }
     Run<?,?> build = (Run<?,?>) _build;
 
-    String scriptPath = String.format("%s/Jenkinsfile", templateId);
-
     try(SCMFileSystem fs = SCMFileSystem.of(build.getParent(), scm)) {
       if (fs != null) {
         try {
           String script = fs.child(scriptPath).contentAsString();
 
-          Properties properties = new Properties();
-          try (StringReader stringReader = new StringReader(templateConfig)) {
-            properties.load(stringReader);
+          Properties paramProps = new Properties();
+          try (StringReader stringReader = new StringReader(parameters)) {
+            paramProps.load(stringReader);
           } catch (IOException ioe) {
             throw new Exception("Problem occurs on loading content", ioe);
           }
 
-          EnvVars envVars = ((Run<?, ?>) _build).getEnvironment(listener);
-          for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            envVars.put((String) entry.getKey(), (String) entry.getValue());
-          }
-          String jenkinsfile = envVars.expand(script);
+          String jenkinsfile = substitute(script, paramProps);
           listener.getLogger().println("Obtained " + scriptPath + " from " + scm.getKey());
+
           Queue.Executable exec = owner.getExecutable();
           FlowDurabilityHint hint = (exec instanceof Run) ? DurabilityHintProvider.suggestedFor(((Run)exec).getParent()) : GlobalDefaultFlowDurabilityLevel.getDefaultDurabilityHint();
           return new CpsFlowExecution(jenkinsfile, true, owner, hint);
         } catch (FileNotFoundException e) {
           throw new AbortException("Unable to find " + scriptPath + " from " + scm.getKey());
         }
-      } else {
-        listener.getLogger().println("Lightweight checkout support not available, falling back to full checkout.");
       }
     }
 
     return null;
   }
+
+  public String substitute(String template, Properties parameters) {
+
+    Pattern p = Pattern.compile("\\{\\{\\s*([^\\}]+)\\s*\\}}");
+    String input = StringUtils.trimToEmpty(template);
+
+    if (input.isEmpty()) {
+      return input;
+    }
+
+    StringBuffer sb = new StringBuffer();
+    Matcher m = p.matcher(input);
+    while (m.find()) {
+      String[] parts = m.group(1).split(":-");
+
+      String key = parts[0];
+      String _default = parts.length > 1 ? parts[1] : null;
+      String v = (String) parameters.getOrDefault(key, _default);
+
+      if (v == null) {
+        v = "";
+      }
+
+      m.appendReplacement(sb, v);
+    }
+
+    m.appendTail(sb);
+    return sb.toString();
+  }
+
 
   @Extension
   public static class DescriptorImpl extends FlowDefinitionDescriptor {
