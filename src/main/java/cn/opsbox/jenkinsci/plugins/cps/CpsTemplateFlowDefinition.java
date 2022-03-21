@@ -103,7 +103,7 @@ public class CpsTemplateFlowDefinition extends FlowDefinition {
     while (m.find()) {
       String[] parts = m.group(1).split(":-");
 
-      String key = parts[0];
+      String key = parts[0].trim();
       String _default = parts.length > 1 ? parts[1] : null;
       String v = (String) parameters.getOrDefault(key, _default);
 
