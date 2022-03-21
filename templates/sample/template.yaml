@@ -1,0 +1,8 @@
+type: pipeline-template
+version: 1
+
+name: Sample
+description: 这是一个样例模板
+parameters:
+  - name: woc
+    displayName: 这就是一句反馈
