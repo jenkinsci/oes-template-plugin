@@ -4,34 +4,9 @@ OES Template plugin is a simple implementation of the CloudBees Pipeline Templat
 
 ## Usage
 
-First, create a template.yaml file that describes the meaning and type of the parameter variable
+First, create a [template.yaml](templates/sample/Jenkinsfile) file that describes the meaning and type of the parameter variable
 
-```yaml
-
-type: pipeline-template
-version: 1
-
-name: Sample
-description: 这是一个样例模板
-parameters:
-  - name: woc
-    displayName: 这就是一句反馈
-```
-
-Second, write Jenkinsfile, using variables defined by template.yml
-
-```Jenkinsfile
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-          steps {
-            echo "${woc}"
-          }
-        }
-    }
-}
-```
+Second, write [Jenkinsfile](templates/sample/Jenkinsfile), using variables defined by template.yml
 
 Third, create Pipeline Job and fill in configuration information with project information, such as
 
