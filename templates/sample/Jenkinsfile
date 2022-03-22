@@ -69,3 +69,4 @@ def purgeBranchString(branch) {
 
     return gitBranch
 }
+
