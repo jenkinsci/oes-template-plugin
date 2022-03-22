@@ -1,10 +1,71 @@
+
 pipeline {
-    agent any
-    stages {
-        stage('Build') {
-          steps {
-            echo "${woc}"
+
+  agent any
+
+  options {    
+    disableConcurrentBuilds()
+    skipDefaultCheckout true
+  }
+
+  stages{
+
+      stage("Checkout Code") {
+        steps {
+          script {
+            deleteDir()
+            cleanWs()
+            def branch = purgeBranchString(git.branch)
+            git branch: "${branch}", credentialsId: "${git.auth}", url: "${git.url}"
           }
         }
+      }
+
+      stage("build") {
+        environment {
+          DOCKER_AUTH = credentials("${build.docker_auth}")
+          DOCKER_REG  = "${build.docker_reg}"
+          TARGET_PATH = "${build.target_path}"
+        }
+        steps {
+          oesStep stepId: "maven", 
+                  stepProps: [
+                    stepProp(key: "toolenv", value: "docker"),
+                    stepProp(key: "toolenv.img", value: "k8ops/jenkins-build:maven-java8u201"),
+                    stepProp(key: "options", value: "clean package -Dmaven.test.skip=true"),
+                    stepProp(key: "settings.id", value: "opsbox")
+                  ]
+          oesStep stepId: "inject-scripts"
+
+          sh '''              
+            set -eux
+            mkdir -p dist/lib
+            cp -r ${TARGET_PATH}/*.jar dist/lib/
+            cp -r .oes/run/inject-scripts/spring/bin dist/
+            cp -r .oes/run/inject-scripts/spring/Dockerfile ./
+          '''
+
+          oesStep stepId: "package",
+                  stepProps: [
+                    stepProp(key: "fileset.dir", value: "dist"),
+                    stepProp(key: "chmod.includes", value: "bin/*.sh")
+                  ]
+        }
+      }
+  }
+}
+
+def purgeBranchString(branch) {
+
+  def gitBranch = branch
+
+    if (gitBranch?.startsWith("refs/heads/")) {
+        gitBranch = gitBranch.replace("refs/heads/", "")
     }
+
+    if (gitBranch?.startsWith("refs/tags/")) {
+        gitBranch = gitBranch.replace("refs/tags/", "")
+    }
+
+    return gitBranch
 }

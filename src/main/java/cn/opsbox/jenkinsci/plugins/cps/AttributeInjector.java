@@ -4,18 +4,19 @@ import com.google.common.collect.Maps;
 import groovy.lang.GroovyShell;
 import hudson.Extension;
 import hudson.model.Queue;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import lombok.SneakyThrows;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowExecution;
 import org.jenkinsci.plugins.workflow.cps.GroovyShellDecorator;
 import org.jenkinsci.plugins.workflow.flow.FlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.CheckForNull;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,12 +50,15 @@ public class AttributeInjector extends GroovyShellDecorator {
             CpsTemplateFlowDefinition cpsTemplateFlowDefinition = (CpsTemplateFlowDefinition) definition;
             String parameters = cpsTemplateFlowDefinition.getParameters();
 
-            Properties paramProps = new Properties();
-            try (StringReader stringReader = new StringReader(parameters)) {
-                paramProps.load(stringReader);
-            } catch (IOException ignored) {
+            Queue.Executable _build = context.getOwner().getExecutable();
+            if (!(_build instanceof Run)) {
+                throw new IOException("can only check out SCM into a Run");
             }
-            attributes = Maps.newHashMap(Maps.fromProperties(paramProps));
+            Run<?,?> build = (Run<?,?>) _build;
+
+            TaskListener taskListener = context.getOwner().getListener();
+            String expandParameters = build.getEnvironment(taskListener).expand(parameters);
+            attributes = new Yaml().load(expandParameters);
         }
 
         // TODO Multibranch Job

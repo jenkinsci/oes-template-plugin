@@ -1,8 +1,25 @@
-type: pipeline-template
-version: 1
+git:
+  branch:
+    meta:
+      type: string
+      default: master
+  auth:
+    meta:
+      type: credential
+      default: jenkins-gitlab
+  url:
+    meta:
+      type: string
 
-name: Sample
-description: 这是一个样例模板
-parameters:
-  - name: woc
-    displayName: 这就是一句反馈
+build:
+  docker_auth:
+    meta:
+      type: credential
+      default: opsbox-acr-auth
+  docker_reg:
+    meta:
+      type: string
+      default: registry.cn-chengdu.aliyuncs.com
+  target_path:
+    meta:
+      type: string
