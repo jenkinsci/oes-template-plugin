@@ -33,7 +33,7 @@ public class AttributeInjector extends GroovyShellDecorator {
         try {
             executable = context.getOwner().getExecutable();
         } catch (IOException x) {
-            LOGGER.log(Level.WARNING, (String)null, x);
+            LOGGER.log(Level.WARNING, null, x);
             return;
         }
         if (!(executable instanceof WorkflowRun)) {
@@ -45,10 +45,10 @@ public class AttributeInjector extends GroovyShellDecorator {
         FlowDefinition definition = job.getDefinition();
         Map<String, Object> attributes = Maps.newHashMap();
 
-        if (definition instanceof CpsTemplateFlowDefinition) {
+        if (definition instanceof OesTemplateFlowDefinition) {
 
-            CpsTemplateFlowDefinition cpsTemplateFlowDefinition = (CpsTemplateFlowDefinition) definition;
-            String parameters = cpsTemplateFlowDefinition.getParameters();
+            OesTemplateFlowDefinition oesTemplateFlowDefinition = (OesTemplateFlowDefinition) definition;
+            String parameters = oesTemplateFlowDefinition.getParameters();
 
             Queue.Executable _build = context.getOwner().getExecutable();
             if (!(_build instanceof Run)) {
