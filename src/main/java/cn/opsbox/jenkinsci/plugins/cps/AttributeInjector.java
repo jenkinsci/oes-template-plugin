@@ -58,7 +58,9 @@ public class AttributeInjector extends GroovyShellDecorator {
 
             TaskListener taskListener = context.getOwner().getListener();
             String expandParameters = build.getEnvironment(taskListener).expand(parameters);
-            attributes = new Yaml().load(expandParameters);
+            if (!expandParameters.isEmpty()) {
+                attributes = new Yaml().load(expandParameters);
+            }
         }
 
         // TODO Multibranch Job

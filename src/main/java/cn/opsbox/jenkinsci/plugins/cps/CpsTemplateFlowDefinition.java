@@ -80,6 +80,8 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
                     } catch (FileNotFoundException e) {
                         throw new AbortException("Unable to find " + scriptPath + " from " + scm1.getKey());
                     }
+                } else {
+                    throw new AbortException("Could not get template file " + scriptPath + " from " + scm1.getKey());
                 }
             }
         }
