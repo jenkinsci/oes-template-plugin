@@ -30,8 +30,7 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
         if (!(exec instanceof WorkflowRun)) {
             throw new IllegalStateException("inappropriate context");
         }
-        FlowDurabilityHint hint = (exec instanceof Item) ? DurabilityHintProvider.suggestedFor((Item)exec) : GlobalDefaultFlowDurabilityLevel.getDefaultDurabilityHint();
-        return hint;
+        return GlobalDefaultFlowDurabilityLevel.getDefaultDurabilityHint();
     }
 
     @Override
@@ -80,6 +79,8 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
                     } catch (FileNotFoundException e) {
                         throw new AbortException("Unable to find " + scriptPath + " from " + scm1.getKey());
                     }
+                } else {
+                    throw new AbortException("Could not get template file " + scriptPath + " from " + scm1.getKey());
                 }
             }
         }
