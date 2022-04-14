@@ -30,8 +30,7 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
         if (!(exec instanceof WorkflowRun)) {
             throw new IllegalStateException("inappropriate context");
         }
-        FlowDurabilityHint hint = (exec instanceof Item) ? DurabilityHintProvider.suggestedFor((Item)exec) : GlobalDefaultFlowDurabilityLevel.getDefaultDurabilityHint();
-        return hint;
+        return GlobalDefaultFlowDurabilityLevel.getDefaultDurabilityHint();
     }
 
     @Override
