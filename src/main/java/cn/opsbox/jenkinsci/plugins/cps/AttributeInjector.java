@@ -65,6 +65,10 @@ public class AttributeInjector extends GroovyShellDecorator {
 
         // TODO Multibranch Job
 
+        if (attributes == null) {
+            return;
+        }
+
         for (Map.Entry<String, Object> entry : attributes.entrySet())
             shell.setVariable(entry.getKey(), entry.getValue());
     }
