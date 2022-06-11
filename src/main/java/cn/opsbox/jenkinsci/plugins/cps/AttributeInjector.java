@@ -1,6 +1,5 @@
 package cn.opsbox.jenkinsci.plugins.cps;
 
-import com.google.common.collect.Maps;
 import groovy.lang.GroovyShell;
 import hudson.Extension;
 import hudson.model.Queue;
@@ -13,9 +12,11 @@ import org.jenkinsci.plugins.workflow.flow.FlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import javax.annotation.CheckForNull;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ public class AttributeInjector extends GroovyShellDecorator {
 
         WorkflowJob job = (WorkflowJob) executable.getParent();
         FlowDefinition definition = job.getDefinition();
-        Map<String, Object> attributes = Maps.newHashMap();
+        Map<String, Object> attributes = new HashMap<>();
 
         if (definition instanceof OesTemplateFlowDefinition) {
 
@@ -59,7 +60,7 @@ public class AttributeInjector extends GroovyShellDecorator {
             TaskListener taskListener = context.getOwner().getListener();
             String expandParameters = build.getEnvironment(taskListener).expand(parameters);
             if (!expandParameters.isEmpty()) {
-                attributes = new Yaml().load(expandParameters);
+                attributes = new Yaml(new SafeConstructor()).load(expandParameters);
             }
         }
 
