@@ -4,36 +4,56 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.3</version>
+        <version>4.40</version>
         <relativePath />
     </parent>
-    <groupId>cn.opsbox.jenkinsci.plugins</groupId>
-    <artifactId>oes-template</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <packaging>hpi</packaging>
+
     <properties>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <revision>1.0.0</revision>
+        <changelist>-SNAPSHOT</changelist>
+        <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
+        <jenkins.version>2.332.1</jenkins.version>
+        <bom.artifactId>2.332.x</bom.artifactId>
+        <bom.version>1409.v7659b_c072f18</bom.version>
+        <java.level>8</java.level>
+        <!--
+        Other properties you may want to use:
+          ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
+          ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
+          ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
+        -->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.20</lombok.version>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <java.level>8</java.level>
-        <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.303.3</jenkins.version>
-        <stapler.version>1.102</stapler.version>
-        <jdk.version>1.8</jdk.version>
-        <java.level>8</java.level>
-        <java.level.test>8</java.level.test>
     </properties>
+
     <name>OES Template</name>
-    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    <groupId>cn.opsbox.jenkinsci.plugins</groupId>
+    <artifactId>oes-template</artifactId>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin/blob/${project.artifactId}-${revision}/README.md</url>
+    <version>${revision}${changelist}</version>
+    <packaging>hpi</packaging>
+
     <licenses>
         <license>
             <name>MIT License</name>
             <url>http://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <id>seanly</id>
+            <name>seanly</name>
+            <url>https://github.com/seanly</url>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    </issueManagement>
+
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
@@ -44,8 +64,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.263.x</artifactId>
-                <version>26</version>
+                <artifactId>bom-${bom.artifactId}</artifactId>
+                <version>${bom.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
