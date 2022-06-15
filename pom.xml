@@ -31,7 +31,7 @@
     <groupId>cn.opsbox.jenkinsci.plugins</groupId>
     <artifactId>oes-template</artifactId>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin/blob/${project.artifactId}-${revision}/README.md</url>
-    <version>${revision}${changelist}</version>
+    <version>1.0.0</version>
     <packaging>hpi</packaging>
 
     <licenses>
@@ -58,7 +58,8 @@
         <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    </scm>
+      <tag>oes-template-1.0.0</tag>
+  </scm>
 
     <dependencyManagement>
         <dependencies>
