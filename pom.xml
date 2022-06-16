@@ -9,19 +9,14 @@
     </parent>
 
     <properties>
-        <revision>1.0.1</revision>
-        <changelist>-SNAPSHOT</changelist>
-        <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.332.1</jenkins.version>
-        <bom.artifactId>2.332.x</bom.artifactId>
-        <bom.version>1409.v7659b_c072f18</bom.version>
+        <changelist>999999-SNAPSHOT</changelist>
+
+        <jenkins.version>2.303.3</jenkins.version>
+        <jenkins-tools-bom.artifactId>bom-2.303.x</jenkins-tools-bom.artifactId>
+        <jenkins-tools-bom.version>987.v4ade2e49fe70</jenkins-tools-bom.version>
+
         <java.level>8</java.level>
-        <!--
-        Other properties you may want to use:
-          ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
-          ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
-          ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
-        -->
+        <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.20</lombok.version>
@@ -30,9 +25,10 @@
     <name>OES Template</name>
     <groupId>cn.opsbox.jenkinsci.plugins</groupId>
     <artifactId>oes-template</artifactId>
-    <url>https://github.com/jenkinsci/${project.artifactId}-plugin/blob/${project.artifactId}-${revision}/README.md</url>
-    <version>${revision}${changelist}</version>
+    <version>${changelist}</version>
     <packaging>hpi</packaging>
+    <description>A simple implementation of the Pipeline Template</description>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <licenses>
         <license>
@@ -51,24 +47,24 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+        <url>https://github.com/${gitHubRepo}</url>
     </issueManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-      <tag>HEAD</tag>
-  </scm>
+        <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
+        <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+        <url>https://github.com/jenkinsci/${gitHubRepo}</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-${bom.artifactId}</artifactId>
-                <version>${bom.version}</version>
-                <scope>import</scope>
+                <artifactId>${jenkins-tools-bom.artifactId}</artifactId>
+                <version>${jenkins-tools-bom.version}</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

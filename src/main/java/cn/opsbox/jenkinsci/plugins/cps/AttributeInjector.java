@@ -1,5 +1,6 @@
 package cn.opsbox.jenkinsci.plugins.cps;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import groovy.lang.GroovyShell;
 import hudson.Extension;
 import hudson.model.Queue;
@@ -14,7 +15,6 @@ import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import javax.annotation.CheckForNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
