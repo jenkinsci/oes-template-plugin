@@ -64,8 +64,6 @@ public class AttributeInjector extends GroovyShellDecorator {
             }
         }
 
-        // TODO Multibranch Job
-
         if (attributes == null) {
             return;
         }
