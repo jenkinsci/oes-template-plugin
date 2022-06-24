@@ -22,31 +22,19 @@ public class OesTemplateWorkflowBranchProjectFactory extends WorkflowBranchProje
   static final String SCRIPT = "Jenkinsfile";
 
   @Getter
-  private String scriptPath = "Jenkinsfile";
-
-  @Getter
   private String localMarker = "";
 
   @Getter
-  private SCM scriptSCM;
+  private final String parameters;
+
+  @Getter
+  protected OesTemplateFlowDefinitionConfiguration configProvider;
 
   @DataBoundConstructor
-  public OesTemplateWorkflowBranchProjectFactory(String localMarker) {
+  public OesTemplateWorkflowBranchProjectFactory(String localMarker, OesTemplateFlowDefinitionConfiguration configProvider, String parameters) {
     this.localMarker = localMarker;
-  }
-
-  @DataBoundSetter
-  public void setScriptPath(String scriptPath) {
-    if (StringUtils.isEmpty(scriptPath)) {
-      this.scriptPath = SCRIPT;
-    } else {
-      this.scriptPath = scriptPath;
-    }
-  }
-
-  @DataBoundSetter
-  public void setScriptSCM(SCM scriptSCM) {
-    this.scriptSCM = scriptSCM;
+    this.configProvider = configProvider;
+    this.parameters = parameters;
   }
 
   @Override
@@ -56,7 +44,9 @@ public class OesTemplateWorkflowBranchProjectFactory extends WorkflowBranchProje
 
   @Override
   protected FlowDefinition createDefinition() {
-    return new OesTemplateSCMBinder(scriptPath, scriptSCM);
+    OesTemplateFlowDefinition definition =  new OesTemplateFlowDefinition(parameters);
+    definition.setConfigProvider(configProvider);
+    return definition;
   }
 
   @Extension
@@ -65,7 +55,7 @@ public class OesTemplateWorkflowBranchProjectFactory extends WorkflowBranchProje
     @NonNull
     @Override
     public String getDisplayName() {
-      return "by OES Template Provider";
+      return "by OES Template";
     }
 
     public Collection<? extends SCMDescriptor<?>> getApplicableDescriptors() {

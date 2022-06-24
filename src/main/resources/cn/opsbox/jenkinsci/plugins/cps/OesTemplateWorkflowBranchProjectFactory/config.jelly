@@ -4,8 +4,22 @@
   <f:entry title="${%Local Marker}" field="localMarker">
     <f:textbox default=""/>
   </f:entry>
-  <f:entry title="${%Script Path}" field="scriptPath">
-    <f:textbox default="Jenkinsfile"/>
+
+  <script><![CDATA[
+    var YamlMatrixExecutionStrategy = {
+      // ref. https://issues.jenkins-ci.org/browse/JENKINS-15604
+      cmChange: function(editor, change){
+        editor.save();
+        $$('.validated').forEach(function (e) {e.onchange()})
+      }
+    }
+    ]]></script>
+
+  <f:dropdownDescriptorSelector field="configProvider"
+                                title="Template"/>
+
+  <f:entry field="parameters" title="${%Parameters}">
+    <f:textarea clazz="parameters" default="---" codemirror-mode="yaml" codemirror-config="mode: 'text/x-yaml', onChange: YamlMatrixExecutionStrategy.cmChange" />
   </f:entry>
-  <f:dropdownDescriptorSelector field="scriptSCM" title="Jenkinsfile SCM" descriptors="${descriptor.applicableDescriptors}"/>
+
 </j:jelly>
