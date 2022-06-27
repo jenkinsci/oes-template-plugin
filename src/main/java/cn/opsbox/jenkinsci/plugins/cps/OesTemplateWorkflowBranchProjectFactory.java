@@ -4,22 +4,17 @@ import cn.opsbox.jenkinsci.plugins.cps.scm.SCMFilter;
 import cn.opsbox.jenkinsci.plugins.cps.scm.SCMSourceCriteriaForOesTemplate;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
-import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
 import jenkins.scm.api.SCMSource;
 import jenkins.scm.api.SCMSourceCriteria;
 import lombok.Getter;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.flow.FlowDefinition;
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowBranchProjectFactory;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
 import java.util.Collection;
 
 public class OesTemplateWorkflowBranchProjectFactory extends WorkflowBranchProjectFactory {
-
-  static final String SCRIPT = "Jenkinsfile";
 
   @Getter
   private String localMarker = "";

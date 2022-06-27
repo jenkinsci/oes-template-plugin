@@ -12,7 +12,7 @@ public class SCMSourceCriteriaForOesTemplate {
   public static boolean matches(String localMarker, SCMSourceCriteria.Probe probe, TaskListener taskListener) throws IOException {
     // Match all if local file is not specified
     if (StringUtils.isEmpty(localMarker)) {
-      taskListener.getLogger().println("No local file defined. Skipping Source Code SCM probe, since Jenkinsfile will be provided by Remote Jenkins File Plugin");
+      taskListener.getLogger().println("No local file defined. Skipping Source Code SCM probe, since Jenkinsfile will be provided by OES Template Plugin");
       return true;
     }
 
