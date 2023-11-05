@@ -13,6 +13,7 @@ import org.jenkinsci.plugins.workflow.flow.FlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.IOException;
@@ -60,7 +61,8 @@ public class AttributeInjector extends GroovyShellDecorator {
             TaskListener taskListener = context.getOwner().getListener();
             String expandParameters = build.getEnvironment(taskListener).expand(parameters);
             if (!expandParameters.isEmpty()) {
-                attributes = new Yaml(new SafeConstructor()).load(expandParameters);
+                LoaderOptions loaderOptions = new LoaderOptions();
+                attributes = new Yaml(new SafeConstructor(loaderOptions)).load(expandParameters);
             }
         }
 
