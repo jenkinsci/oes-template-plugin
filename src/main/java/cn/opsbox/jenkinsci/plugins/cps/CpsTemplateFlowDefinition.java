@@ -69,7 +69,7 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
             if (store != null) {
                 Config config = store.getById(scriptId);
                 if (config != null) {
-                    return config.content;
+                    script = config.content;
                 }
             }
             throw new IllegalArgumentException("Config File not found. Check configuration.");
