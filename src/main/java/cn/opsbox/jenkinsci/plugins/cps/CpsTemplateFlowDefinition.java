@@ -12,6 +12,11 @@ import org.jenkinsci.plugins.workflow.cps.persistence.PersistIn;
 import org.jenkinsci.plugins.workflow.flow.*;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 
+
+import org.jenkinsci.lib.configprovider.model.Config;
+import org.jenkinsci.plugins.configfiles.ConfigFileStore;
+import org.jenkinsci.plugins.configfiles.GlobalConfigFiles;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -57,6 +62,18 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
         if (configProvider instanceof ConsoleOesTemplateFlowDefinitionConfiguration) {
             ConsoleOesTemplateFlowDefinitionConfiguration console = (ConsoleOesTemplateFlowDefinitionConfiguration) configProvider;
             script = console.getScript();
+        } else if (configProvider instanceof ConfigFileProviderOesTemplateFlowDefinitionConfiguration) {
+            ConfigFileProviderOesTemplateFlowDefinitionConfiguration configFile = (ConfigFileProviderOesTemplateFlowDefinitionConfiguration) configProvider;
+            String scriptId = configFile.getScriptId();
+            ConfigFileStore store = GlobalConfigFiles.get();
+            if (store != null) {
+                Config config = store.getById(scriptId);
+                if (config != null) {
+                    return config.content;
+                }
+            }
+            throw new IllegalArgumentException("Config File not found. Check configuration.");
+
         } else {
             ScmOesTemplateFlowDefinitionConfiguration scm = (ScmOesTemplateFlowDefinitionConfiguration) configProvider;
 
