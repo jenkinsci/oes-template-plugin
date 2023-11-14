@@ -4,18 +4,17 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.40</version>
+        <version>4.75</version>
         <relativePath />
     </parent>
 
     <properties>
         <changelist>999999-SNAPSHOT</changelist>
 
-        <jenkins.version>2.303.3</jenkins.version>
-        <jenkins-tools-bom.artifactId>bom-2.303.x</jenkins-tools-bom.artifactId>
-        <jenkins-tools-bom.version>987.v4ade2e49fe70</jenkins-tools-bom.version>
+        <jenkins.version>2.414.3</jenkins.version>
+        <jenkins-tools-bom.artifactId>bom-2.414.x</jenkins-tools-bom.artifactId>
+        <jenkins-tools-bom.version>2571.vede9dc5a_2e23</jenkins-tools-bom.version>
 
-        <java.level>8</java.level>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -105,7 +104,6 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>config-file-provider</artifactId>
-            <version>3.2</version>
         </dependency>
     </dependencies>
 

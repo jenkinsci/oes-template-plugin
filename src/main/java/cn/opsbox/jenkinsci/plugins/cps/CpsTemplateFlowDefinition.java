@@ -12,7 +12,6 @@ import org.jenkinsci.plugins.workflow.cps.persistence.PersistIn;
 import org.jenkinsci.plugins.workflow.flow.*;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 
-
 import org.jenkinsci.lib.configprovider.model.Config;
 import org.jenkinsci.plugins.configfiles.ConfigFileStore;
 import org.jenkinsci.plugins.configfiles.GlobalConfigFiles;
@@ -58,6 +57,7 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
     String initializePipeline(FlowExecutionOwner owner) {
 
         String script = "";
+        TaskListener listener = owner.getListener();
 
         if (configProvider instanceof ConsoleOesTemplateFlowDefinitionConfiguration) {
             ConsoleOesTemplateFlowDefinitionConfiguration console = (ConsoleOesTemplateFlowDefinitionConfiguration) configProvider;
@@ -70,9 +70,14 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
                 Config config = store.getById(scriptId);
                 if (config != null) {
                     script = config.content;
+                    listener.getLogger().println("Obtained " + scriptId + " from Config File Provider");
+                    return script;
+                } else {
+                    throw new AbortException("Config File not found. Check configuration.");
                 }
+            } else {
+                throw new AbortException("Get ConfigFileStore Error. Check configuration.");
             }
-            throw new IllegalArgumentException("Config File not found. Check configuration.");
 
         } else {
             ScmOesTemplateFlowDefinitionConfiguration scm = (ScmOesTemplateFlowDefinitionConfiguration) configProvider;
@@ -85,14 +90,13 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
 
             SCM scm1 = scm.getScm();
             String scriptPath = scm.getScriptPath();
-            TaskListener listener = owner.getListener();
 
             try(SCMFileSystem fs = SCMFileSystem.of(build.getParent(), scm1)) {
                 if (fs != null) {
                     try {
                         script = fs.child(scriptPath).contentAsString();
                         listener.getLogger().println("Obtained " + scriptPath + " from " + scm1.getKey());
-
+                        return script;
                     } catch (FileNotFoundException e) {
                         throw new AbortException("Unable to find " + scriptPath + " from " + scm1.getKey());
                     }
@@ -104,5 +108,4 @@ public abstract class CpsTemplateFlowDefinition extends FlowDefinition {
 
         return script;
     }
-
 }
