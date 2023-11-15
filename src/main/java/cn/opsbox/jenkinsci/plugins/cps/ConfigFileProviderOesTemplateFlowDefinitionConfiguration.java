@@ -17,7 +17,7 @@ public class ConfigFileProviderOesTemplateFlowDefinitionConfiguration extends Oe
     @Extension
     public static class DescriptorImpl extends OesTemplateFlowDefinitionConfiguration.DescriptorImpl {
         public String getDisplayName() {
-            return "From Config File Provider";
+            return "From Config File";
         }
     }
 }
