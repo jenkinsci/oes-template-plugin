@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.lib.configprovider.model.Config;
 import org.jenkinsci.plugins.configfiles.ConfigFileStore;
 import org.jenkinsci.plugins.configfiles.GlobalConfigFiles;
+import org.jenkinsci.plugins.configfiles.groovy.GroovyScript;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
@@ -46,7 +47,9 @@ public class ConfigFileProviderOesTemplateFlowDefinitionConfiguration extends Oe
                 ConfigFileStore store = GlobalConfigFiles.get();
                 Collection<Config> configs = store.getConfigs();
                 for (Config config : configs) {
-                  items.add(config.name, config.id);
+                  if (config instanceof GroovyScript) {
+                    items.add(config.name, config.id);
+                  }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
