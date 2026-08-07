@@ -3,15 +3,15 @@ package cn.opsbox.jenkinsci.plugins.cps.scm;
 import hudson.model.TaskListener;
 import jenkins.scm.api.SCMProbeStat;
 import jenkins.scm.api.SCMSourceCriteria;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import hudson.Util;
 
 public class SCMSourceCriteriaForOesTemplate {
 
   public static boolean matches(String localMarker, SCMSourceCriteria.Probe probe, TaskListener taskListener) throws IOException {
     // Match all if local file is not specified
-    if (StringUtils.isEmpty(localMarker)) {
+    if (Util.fixEmpty(localMarker) == null) {
       taskListener.getLogger().println("No local file defined. Skipping Source Code SCM probe, since Jenkinsfile will be provided by OES Template Plugin");
       return true;
     }
