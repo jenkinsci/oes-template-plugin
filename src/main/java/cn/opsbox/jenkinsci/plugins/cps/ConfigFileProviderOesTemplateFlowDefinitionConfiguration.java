@@ -7,7 +7,6 @@ import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.lib.configprovider.model.Config;
 import org.jenkinsci.plugins.configfiles.ConfigFileStore;
 import org.jenkinsci.plugins.configfiles.GlobalConfigFiles;
